@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"go/types"
-	"io/ioutil"
+	"os"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -871,7 +871,7 @@ func TestGenerateTests(t *testing.T) {
 			want: mustReadAndFormatGoFile(t, "testdata/named/named_on_subtests_on_parallel_on_template_testify.go"),
 		},
 	}
-	tmp, err := ioutil.TempDir("", "gotests_test")
+	tmp, err := os.MkdirTemp("", "gotests_test")
 	if err != nil {
 		t.Fatalf("ioutil.TempDir: %v", err)
 	}
@@ -948,14 +948,14 @@ func mustReadAndFormatGoFile(t *testing.T, filename string) string {
 
 func outputResult(t *testing.T, tmpDir, testName string, got []byte) {
 	tmpResult := path.Join(tmpDir, toSnakeCase(testName)+".go")
-	if err := ioutil.WriteFile(tmpResult, got, 0644); err != nil {
+	if err := os.WriteFile(tmpResult, got, 0644); err != nil {
 		t.Errorf("ioutil.WriteFile: %v", err)
 	}
 	t.Logf(tmpResult)
 }
 
 func loadExternalJsonFile(file string) (map[string]interface{}, error) {
-	buf, err := ioutil.ReadFile(file)
+	buf, err := os.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}
@@ -966,7 +966,7 @@ func loadExternalJsonFile(file string) (map[string]interface{}, error) {
 }
 
 func mustLoadExternalTemplateDir(t *testing.T, dir string) [][]byte {
-	files, err := ioutil.ReadDir(dir)
+	files, err := os.ReadDir(dir)
 	if err != nil {
 		t.Fatalf("ioutil.ReadDir: %v", err)
 	}
@@ -982,7 +982,7 @@ func mustLoadExternalTemplateDir(t *testing.T, dir string) [][]byte {
 }
 
 func mustLoadExternalTemplateFile(t *testing.T, file string) []byte {
-	buf, err := ioutil.ReadFile(file)
+	buf, err := os.ReadFile(file)
 	if err != nil {
 		t.Fatalf("loading external template file: %v", err)
 	}
@@ -992,7 +992,7 @@ func mustLoadExternalTemplateFile(t *testing.T, file string) []byte {
 
 func toSnakeCase(s string) string {
 	var res []rune
-	for _, r := range []rune(s) {
+	for _, r := range s {
 		r = unicode.ToLower(r)
 		switch r {
 		case ' ', '.':
