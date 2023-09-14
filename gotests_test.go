@@ -873,7 +873,7 @@ func TestGenerateTests(t *testing.T) {
 	}
 	tmp, err := os.MkdirTemp("", "gotests_test")
 	if err != nil {
-		t.Fatalf("ioutil.TempDir: %v", err)
+		t.Fatalf("os.MkdirTemp: %v", err)
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -949,7 +949,7 @@ func mustReadAndFormatGoFile(t *testing.T, filename string) string {
 func outputResult(t *testing.T, tmpDir, testName string, got []byte) {
 	tmpResult := path.Join(tmpDir, toSnakeCase(testName)+".go")
 	if err := os.WriteFile(tmpResult, got, 0644); err != nil {
-		t.Errorf("ioutil.WriteFile: %v", err)
+		t.Errorf("os.WriteFile: %v", err)
 	}
 	t.Logf(tmpResult)
 }
@@ -968,7 +968,7 @@ func loadExternalJsonFile(file string) (map[string]interface{}, error) {
 func mustLoadExternalTemplateDir(t *testing.T, dir string) [][]byte {
 	files, err := os.ReadDir(dir)
 	if err != nil {
-		t.Fatalf("ioutil.ReadDir: %v", err)
+		t.Fatalf("os.ReadDir: %v", err)
 	}
 
 	templateData := make([][]byte, 0)
