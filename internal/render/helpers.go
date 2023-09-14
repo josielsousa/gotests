@@ -3,12 +3,16 @@ package render
 //go:generate esc -o bindata/esc.go -pkg=bindata templates
 import (
 	"fmt"
-	"strings"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 
 	"github.com/cweill/gotests/internal/models"
 )
 
 const nFile = 7 // Number of files to be read from template (package) template (directory)
+
+var caser = cases.Title(language.English, cases.NoLower)
 
 func fieldName(f *models.Field) string {
 	var n string
@@ -51,7 +55,7 @@ func parameterName(f *models.Field) string {
 func wantName(f *models.Field) string {
 	var n string
 	if f.IsNamed() {
-		n = "want" + strings.Title(f.Name)
+		n = "want" + caser.String(f.Name)
 	} else if f.Index == 0 {
 		n = "want"
 	} else {
@@ -63,7 +67,7 @@ func wantName(f *models.Field) string {
 func gotName(f *models.Field) string {
 	var n string
 	if f.IsNamed() {
-		n = "got" + strings.Title(f.Name)
+		n = "got" + caser.String(f.Name)
 	} else if f.Index == 0 {
 		n = "got"
 	} else {

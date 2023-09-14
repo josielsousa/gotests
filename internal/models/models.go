@@ -3,7 +3,12 @@ package models
 import (
 	"strings"
 	"unicode"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
+
+var caser = cases.Title(language.English, cases.NoLower)
 
 type Expression struct {
 	Value      string
@@ -123,7 +128,8 @@ func (f *Function) FullName() string {
 	if f.Receiver != nil {
 		r = f.Receiver.Type.Value
 	}
-	return strings.Title(r) + strings.Title(f.Name)
+
+	return caser.String(r) + caser.String(f.Name)
 }
 
 func (f *Function) TestName() string {
